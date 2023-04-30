@@ -1,22 +1,27 @@
-#!/usr/bin/env Rscript --vanilla
+#!/usr/bin/env Rscript
 
 ###---START MESSAGE---###
 version <- "beta"
-cat(paste0('Thank you for using spree ',version,'!\n', sep = "\n"))
+cat(paste0('\nThank you for using spree ',version,'!\n', sep = "\n"))
 
 args <- commandArgs(trailingOnly = TRUE)
 taxon <- args[1]
 input <- args[2]
-threads <- args[3]
+output <- args[3]
+threads <- args[4]
 
 if(is.na(threads)){
   threads <- 1
 }
 
 ###---HELP---###
-if(taxon == "-h" | taxon == "--help" | taxon == "-help"){
-  message <- "Usage: spree [ncbi taxon] [path to assembly (.fasta)] [threads (default 1)]\n"
+if(is.na(taxon) | taxon == "-h" | taxon == "--help" | taxon == "-help"){
+  message <- "Usage: spree [ncbi taxon] [path to assembly (.fasta)] [path to output directory] [threads (default 1)]\n"
+  example1 <- "Example 1: spree Streptococcus strep_ios1.fasta ./strep_analysis 4"
+  example2 <- "Example 2: spree 1301 strep_ios1.fasta ./strep_analysis 4\n"
   cat(message,sep="\n")
+  cat(example1,sep="\n")
+  cat(example2,sep="\n")
   q("no")
 }
 
@@ -41,26 +46,37 @@ input.name <- input %>%
   gsub(pattern = ".*/", replacement = "") %>%
   gsub(pattern = "\\.*$", replacement = "")
 cat("Done.", sep="\n")
-# determine if taxon has been run before
+
+###---CHECK OUTPUT---###
+# fix output
+output <- output %>% 
+  gsub(pattern = "/$", replacement = "") %>% 
+  gsub(pattern = "$", replacement = "/")
+# check that output exists
+cat("Checking output...")
+dir.create(output, showWarnings = F)
+cat("Done.",sep="\n")
+
+###---DETERMINE IF TAXON HAS BEEN RUN---###
 cat("Checking if taxon has been run...")
-if(!(dir.exists(taxon))){
+if(!(dir.exists(paste0(output,taxon)))){
   cat("Done.",sep="\n")
   ###---GET ASSEMBLIES SUMMARY FOR TAXON---###
   cat(paste0("Fetching all genome data for taxon ",taxon," from NCBI..."))
   # run NCBI-Datasets
   system(paste0("datasets summary genome taxon ",
                taxon,
-  " --as-json-lines | dataformat tsv genome --fields accession,assmstats-genome-coverage,organism-name,assmstats-total-sequence-len,assminfo-status,assminfo-level,organism-tax-id,source_database > ",taxon,"-ncbi.tsv"))
+  " --as-json-lines | dataformat tsv genome --fields accession,assmstats-genome-coverage,organism-name,assmstats-total-sequence-len,assminfo-status,assminfo-level,organism-tax-id,source_database > ",output,taxon,"-ncbi.tsv"))
   
   # load result
   ## check for output
   # check if file exists
-  if (!file.exists(paste0(taxon,'-ncbi.tsv'))) {
+  if (!file.exists(paste0(output,taxon,'-ncbi.tsv'))) {
     # if file doesn't exist, print error message and exit program
-    cat("Error: ncbi.tsv not found.\n")
+    cat(paste0("Error: ",output,taxon,"-ncbi.tsv not found.\n"))
     q("no")
   } else {
-    df.ncbi <- read_tsv(paste0(taxon,'-ncbi.tsv'), show_col_types = FALSE)
+    df.ncbi <- read_tsv(paste0(output,taxon,'-ncbi.tsv'), show_col_types = FALSE)
   }
   cat("Done.",sep="\n")
   
@@ -160,18 +176,18 @@ if(!(dir.exists(taxon))){
   df.select <- do.call(rbind, lapply(unique(df.ncbi$Species), FUN = select_refs)) %>% 
     drop_na(`Assembly Accession`)
   
-  write.table(x = df.select, paste0(taxon,'-select-refs.tsv'), row.names = F, quote = F, sep = '\t')
+  write.table(x = df.select, paste0(output,taxon,'-select-refs.tsv'), row.names = F, quote = F, sep = '\t')
   cat("Done.",sep="\n")
   
   ###---DOWNLOAD REFERENCES---###
   cat(paste0("Downloading ",nrow(df.select)," references..."))
   # create taxon specific directory
-  dir.create(taxon, showWarnings = F)
+  dir.create(paste0(output,taxon), showWarnings = F)
   # function for downloading reference genomes
   download_refs <- function(a){
     system(paste("datasets download genome accession ",
                  a,
-                 " && unzip ncbi_dataset.zip && cp ncbi_dataset/data/*/*.fna ",taxon," && rm -r ncbi_dataset* README.md"))
+                 " && mv ncbi_datasets.zip && unzip ncbi_dataset.zip && cp ncbi_dataset/data/*/*.fna ",output,taxon," && rm -r ncbi_dataset* README.md"))
   }
   
   tmp <- lapply(df.select$`Assembly Accession`, FUN=download_refs)
@@ -182,9 +198,9 @@ if(!(dir.exists(taxon))){
   }
 ###---RUN MASH---###
 cat("Running Mash...", sep="\n")
-system(paste0("mash sketch -p 4 -o sketch.msh ",taxon,"/* ",
+system(paste0("mash sketch -p 4 -o sketch.msh ",output,taxon,"/* ",
               input,
-              " && mash dist -p 4 sketch.msh sketch.msh > mash-ava.tsv"))
+              " && mash dist -p 4 ",output,"sketch.msh ",output,"sketch.msh > ",output,"mash-ava.tsv"))
 cat("Done.",sep="\n")
 
 ###---LOAD METADATA & MASH RESULTS---###
@@ -198,19 +214,19 @@ input.meta <- data.frame("Assembly Accession" = input,
                          face="bold",
                          type="Sample") %>%
   rename("Assembly Accession"=Assembly.Accession)
-df.select <- read_tsv(paste0(taxon,'-select-refs.tsv'), show_col_types = F)
+df.select <- read_tsv(paste0(output,taxon,'-select-refs.tsv'), show_col_types = F)
 meta <- df.select %>%
   select(`Assembly Accession`, name, Species, Overall_Status) %>%
   mutate(name = paste(name,Overall_Status, sep=" "),
          face="plain",
          type="Reference") %>%
   rbind(input.meta)
-write.csv(meta, file=paste0(input.name,"-metadata.csv"))
+write.csv(meta, file=paste0(output,input.name,"-metadata.csv"))
 cat("Done.",sep="\n")
 
 # load mash file
 cat("Loading Mash results...")
-mash.all <- read_tsv("mash-ava.tsv", col_names = F, show_col_types = FALSE)
+mash.all <- read_tsv(paste0(output,"mash-ava.tsv"), col_names = F, show_col_types = FALSE)
 # clean up names
 clean_names <- function(name){
   name <- gsub(pattern = ".*/", replacement = "", name) %>%
@@ -247,7 +263,7 @@ mash.all <- mash.all[,1:3] %>%
 dist <- dist(mash.all, method = "euclidean")
 # create tree and save
 upgma <- upgma(dist)
-write.tree(phy = upgma, file = paste0(input.name,"-mash-ava.tree"))
+write.tree(phy = upgma, file = paste0(output,input.name,"-mash-ava.tree"))
 
 # make tree image
 ## initial plot
@@ -292,15 +308,13 @@ if(hght < 6){
   hght <- 6
 }
 
-ggsave(plot = p_mash.tree, filename = paste0(input.name,"-mash-tree.jpg"), width = wdth, height = hght, dpi = 300, limitsize = F)
+ggsave(plot = p_mash.tree, filename = paste0(output,input.name,"-mash-tree.jpg"), width = wdth, height = hght, dpi = 300, limitsize = F)
 cat("Done.",sep="\n")
-
-
 
 ###---REPORT TOP 10---###
 mash.top.10 %>%
   knitr::kable(row.names = F)
-write.table(x = mash.top.10, paste0(input.name,"-mash-top-10.jpg"), row.names = F, quote = F, sep = '\t')
+write.table(x = mash.top.10, paste0(output,input.name,"-mash-top-10.jpg"), row.names = F, quote = F, sep = '\t')
 
 ###---CLEAN UP---##
-system("rm sketch.msh mash-ava.tsv")
+system(paste0("rm ",output,"sketch.msh ",output,"mash-ava.tsv"))

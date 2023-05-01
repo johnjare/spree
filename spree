@@ -185,9 +185,9 @@ if(!(dir.exists(paste0(output,taxon)))){
   dir.create(paste0(output,taxon), showWarnings = F)
   # function for downloading reference genomes
   download_refs <- function(a){
-    system(paste("datasets download genome accession ",
+    system(paste0("datasets download genome accession ",
                  a,
-                 " && mv ncbi_datasets.zip && unzip ncbi_dataset.zip && cp ncbi_dataset/data/*/*.fna ",output,taxon," && rm -r ncbi_dataset* README.md"))
+                 " && unzip ncbi_dataset.zip && cp ncbi_dataset/data/*/*.fna ",output,taxon,"/ && rm -r ncbi_dataset* README.md"))
   }
   
   tmp <- lapply(df.select$`Assembly Accession`, FUN=download_refs)
@@ -198,7 +198,7 @@ if(!(dir.exists(paste0(output,taxon)))){
   }
 ###---RUN MASH---###
 cat("Running Mash...", sep="\n")
-system(paste0("mash sketch -p 4 -o sketch.msh ",output,taxon,"/* ",
+system(paste0("mash sketch -p 4 -o ",output,"sketch.msh ",output,taxon,"/* ",
               input,
               " && mash dist -p 4 ",output,"sketch.msh ",output,"sketch.msh > ",output,"mash-ava.tsv"))
 cat("Done.",sep="\n")
@@ -206,9 +206,11 @@ cat("Done.",sep="\n")
 ###---LOAD METADATA & MASH RESULTS---###
 cat("Preparing metadata...")
 # prepare metadata
-input.name <- str_split(input, pattern = "/") %>% unlist()
-input.meta <- data.frame("Assembly Accession" = input, 
-                         name=input.name[max(length(input.name))], 
+input.name <- str_split(input, pattern = "/") %>% 
+  unlist()
+input.name <- input.name[length(input.name)]
+input.meta <- data.frame("Assembly Accession" = input.name, 
+                         name=input.name, 
                          Species = NA, 
                          Overall_Status = NA,
                          face="bold",

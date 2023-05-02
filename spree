@@ -2,7 +2,7 @@
 
 ###---START MESSAGE---###
 version <- "beta"
-cat(paste0('\nThank you for using spree ',version,'!\n', sep = "\n"))
+cat(paste0('\033[1;36m\nThank you for using spree ',version,'!\n\033[0m', sep = "\n"))
 
 args <- commandArgs(trailingOnly = TRUE)
 taxon <- args[1]
@@ -26,17 +26,19 @@ if(is.na(taxon) | taxon == "-h" | taxon == "--help" | taxon == "-help"){
 }
 
 ###---LOAD PACKAGES---###
-cat("loading packages...")
+cat("\033[1mLoading packages...\033[0m")
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(ggnewscale))
 suppressPackageStartupMessages(library(treeio))
 suppressPackageStartupMessages(library(ggtree))
 suppressPackageStartupMessages(library(phangorn))
-cat("Done.",sep="\n")
+suppressPackageStartupMessages(library(progress))
+
+  cat("\033[1;32mDone\033[0m",sep="\n")
 
 ###---CHECK INPUT---###
 # check that assembly exists
-cat("Checking input...")
+cat("\033[1mChecking input...\033[0m")
 if (!file.exists(input)) {
   # if file doesn't exist, print error message and exit program
   cat("Error: input file not found.\n")
@@ -45,7 +47,7 @@ if (!file.exists(input)) {
 input.name <- input %>%
   gsub(pattern = ".*/", replacement = "") %>%
   gsub(pattern = "\\.*$", replacement = "")
-cat("Done.", sep="\n")
+cat("\033[1;32mDone\033[0m",sep="\n")
 
 ###---CHECK OUTPUT---###
 # fix output
@@ -53,20 +55,28 @@ output <- output %>%
   gsub(pattern = "/$", replacement = "") %>% 
   gsub(pattern = "$", replacement = "/")
 # check that output exists
-cat("Checking output...")
+cat("\033[1mChecking output...\033[0m")
 dir.create(output, showWarnings = F)
-cat("Done.",sep="\n")
+cat("\033[1;32mDone\033[0m",sep="\n")
+
+###---DEFINE FILE NAMES---###
+ncbi_file <- paste0(output,taxon,"-ncbi.tsv")
+select_file <- paste0(output,taxon,'-select-refs.tsv')
+meta_file <- paste0(output,input.name,"-metadata.csv")
+mash_tree_file <- paste0(output,input.name,"-mash-ava.tree")
+mash_top_10 <- paste0(output,input.name,"-mash-top-10.tsv")
+mash_tree_image <- paste0(output,input.name,"-mash-tree.jpg")
 
 ###---DETERMINE IF TAXON HAS BEEN RUN---###
-cat("Checking if taxon has been run...")
+cat("\033[1mChecking if taxon has been run...\033[0m")
 if(!(dir.exists(paste0(output,taxon)))){
-  cat("Done.",sep="\n")
+    cat("\033[1;32mDone\033[0m",sep="\n")
   ###---GET ASSEMBLIES SUMMARY FOR TAXON---###
-  cat(paste0("Fetching all genome data for taxon ",taxon," from NCBI..."))
+  cat(paste0("\033[1mFetching ",taxon," data from NCBI...\033[0m"))
   # run NCBI-Datasets
   system(paste0("datasets summary genome taxon ",
                taxon,
-  " --as-json-lines | dataformat tsv genome --fields accession,assmstats-genome-coverage,organism-name,assmstats-total-sequence-len,assminfo-status,assminfo-level,organism-tax-id,source_database > ",output,taxon,"-ncbi.tsv"))
+  " --as-json-lines | dataformat tsv genome --fields accession,assmstats-genome-coverage,organism-name,assmstats-total-sequence-len,assminfo-status,assminfo-level,organism-tax-id,source_database > ", ncbi_file))
   
   # load result
   ## check for output
@@ -78,10 +88,10 @@ if(!(dir.exists(paste0(output,taxon)))){
   } else {
     df.ncbi <- read_tsv(paste0(output,taxon,'-ncbi.tsv'), show_col_types = FALSE)
   }
-  cat("Done.",sep="\n")
+  cat("\033[1;32mDone\033[0m",sep="\n")
   
   ###---CLEAN NCBI SUMMARY---###
-  cat("Cleaning the dataset...")
+  cat("\033[1mCleaning the dataset...\033[0m")
   # select only current assemblies
   df.ncbi <- df.ncbi %>%
     subset(`Assembly Status` == "current")
@@ -128,10 +138,10 @@ if(!(dir.exists(paste0(output,taxon)))){
   
   # clean up coverage values
   df.ncbi$`Assembly Stats Genome Coverage` <- as.numeric(gsub(pattern = "x", replacement = "", df.ncbi$`Assembly Stats Genome Coverage`))
-  cat("Done.",sep="\n")
+  cat("\033[1;32mDone\033[0m",sep="\n")
   
   ###---ASSIGN QUALITY STATUS---###
-  cat("Assesing assembly quality...")
+  cat("\033[1mAssesing assembly quality...\033[0m")
   # coverage status
   df.ncbi <- df.ncbi %>%
     mutate(Coverage_Status = case_when(`Assembly Stats Genome Coverage` > 30 ~ TRUE,
@@ -162,9 +172,10 @@ if(!(dir.exists(paste0(output,taxon)))){
     group_by(`Assembly Accession`) %>%
     mutate(Overall_Status = paste(rep('*', Status_Counts), collapse = '')) %>%
     select(-Status_Counts)
+  cat("\033[1;32mDone\033[0m",sep="\n")
   
   ###---SELECT REFEREANCES---###
-  cat("Selecting references...")
+  cat("\033[1mSelecting references...\033[0m")
   select_refs <- function(species){
     # subset by group
     refs <- df.ncbi[df.ncbi$Species == species,] %>%
@@ -175,36 +186,50 @@ if(!(dir.exists(paste0(output,taxon)))){
   
   df.select <- do.call(rbind, lapply(unique(df.ncbi$Species), FUN = select_refs)) %>% 
     drop_na(`Assembly Accession`)
-  
-  write.table(x = df.select, paste0(output,taxon,'-select-refs.tsv'), row.names = F, quote = F, sep = '\t')
-  cat("Done.",sep="\n")
+  # write output
+  write.table(x = df.select, select_file, row.names = F, quote = F, sep = '\t')
+  # count number of references
+  n_ref <- nrow(df.select)
+  cat("\033[1;32mDone\033[0m",sep="\n")
   
   ###---DOWNLOAD REFERENCES---###
-  cat(paste0("Downloading ",nrow(df.select)," references..."))
+  cat(paste0("\033[1mDownloading ",n_ref," references:\033[0m"), sep="\n")
   # create taxon specific directory
   dir.create(paste0(output,taxon), showWarnings = F)
   # function for downloading reference genomes
+  ## progress bar
+  pb <- progress_bar$new(format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+                         total = n_ref,
+                         complete = "=",
+                         incomplete = "-",
+                         current = ">",
+                         clear = FALSE,
+                         width=100)
+  ## function
   download_refs <- function(a){
+    # progress bar
+    pb$tick()
+    # download assemblies
     system(paste0("datasets download genome accession ",
                  a,
-                 " && unzip ncbi_dataset.zip && cp ncbi_dataset/data/*/*.fna ",output,taxon,"/ && rm -r ncbi_dataset* README.md"))
+                 " > /dev/null 2>&1 && unzip ncbi_dataset.zip > /dev/null 2>&1 && cp ncbi_dataset/data/*/*.fna ",output,taxon,"/ > /dev/null 2>&1 && rm -r ncbi_dataset* README.md > /dev/null 2>&1"))
   }
-  
+  ## apply function
   tmp <- lapply(df.select$`Assembly Accession`, FUN=download_refs)
-  cat("Done.",sep="\n")
+  cat("\033[1;32mDone\033[0m",sep="\n")
 }else{
-  cat("Done",sep="\n")
-  cat("\tTaxon has been run before - using existing references",sep="\n")
+  cat("\033[1;32mDone\033[0m",sep="\n")
+  cat("\033[1;33mTaxon has been run before - using existing references\033[0m",sep="\n")
   }
 ###---RUN MASH---###
-cat("Running Mash...", sep="\n")
+cat("\033[1mRunning Mash...\033[0m", sep="\n")
 system(paste0("mash sketch -p 4 -o ",output,"sketch.msh ",output,taxon,"/* ",
               input,
               " && mash dist -p 4 ",output,"sketch.msh ",output,"sketch.msh > ",output,"mash-ava.tsv"))
-cat("Done.",sep="\n")
+cat("\033[1;32mDone\033[0m",sep="\n")
 
 ###---LOAD METADATA & MASH RESULTS---###
-cat("Preparing metadata...")
+cat("\033[1mPreparing metadata...\033[0m")
 # prepare metadata
 input.name <- str_split(input, pattern = "/") %>% 
   unlist()
@@ -223,11 +248,11 @@ meta <- df.select %>%
          face="plain",
          type="Reference") %>%
   rbind(input.meta)
-write.csv(meta, file=paste0(output,input.name,"-metadata.csv"))
-cat("Done.",sep="\n")
+write.csv(meta, file=meta_file)
+cat("\033[1;32mDone\033[0m",sep="\n")
 
 # load mash file
-cat("Loading Mash results...")
+cat("\033[1mLoading Mash results...\033[0m")
 mash.all <- read_tsv(paste0(output,"mash-ava.tsv"), col_names = F, show_col_types = FALSE)
 # clean up names
 clean_names <- function(name){
@@ -240,10 +265,10 @@ clean_names <- function(name){
 }
 mash.all$X1<- lapply(mash.all$X1, FUN=clean_names) %>% unlist()
 mash.all$X2 <- lapply(mash.all$X2, FUN=clean_names) %>% unlist()
-cat("Done.", sep="\n")
+cat("\033[1;32mDone\033[0m",sep="\n")
 
 # get top hit info
-cat("Getting ten closest genomes...")
+cat("\033[1mGetting ten closest genomes...\033[0m")
 mash.top.10 <- mash.all %>%
   subset(X1 == input.name) %>%
   subset(X1 != X2) %>% 
@@ -252,10 +277,12 @@ mash.top.10 <- mash.all %>%
   merge(df.select[,c("Assembly Accession","Species")]) %>%
   select(`Assembly Accession`, Species, `Mash Distance`,`% Matching Kmers`)
 mash.top.10 <- mash.top.10[order(mash.top.10$`Mash Distance`),][1:10,]
-cat("Done.",sep="\n")
+# write to file
+write.table(x = mash.top.10, mash_top_10, row.names = F, quote = F, sep = '\t')
+cat("\033[1;32mDone\033[0m",sep="\n")
   
 ###---MAKE TREE---###
-cat("Building the Mash tree...")
+cat("\033[1mBuilding the Mash tree...\033[0m")
 # convert to matrix
 mash.all <- mash.all[,1:3] %>% 
   unique() %>% 
@@ -265,7 +292,7 @@ mash.all <- mash.all[,1:3] %>%
 dist <- dist(mash.all, method = "euclidean")
 # create tree and save
 upgma <- upgma(dist)
-write.tree(phy = upgma, file = paste0(output,input.name,"-mash-ava.tree"))
+write.tree(phy = upgma, file = mash_tree_file)
 
 # make tree image
 ## initial plot
@@ -310,13 +337,27 @@ if(hght < 6){
   hght <- 6
 }
 
-ggsave(plot = p_mash.tree, filename = paste0(output,input.name,"-mash-tree.jpg"), width = wdth, height = hght, dpi = 300, limitsize = F)
-cat("Done.",sep="\n")
+# save plot
+ggsave(plot = p_mash.tree, filename = mash_tree_image, width = wdth, height = hght, dpi = 300, limitsize = F)
+cat("\033[1;32mDone\033[0m",sep="\n")
+
+###---REPORT FILES---###
+cat("\n\033[1m####### OUTPUT FILES #######\033[0m\n",sep="\n")
+
+cat("\033[1m## Genus-specific Files (Reusable) ##\033[0m",sep="\n")
+cat(paste0("\n\033[1mAll NCBI Metadata: \033[0m",ncbi_file),sep="\n")
+cat(paste0("\033[1mSelect References Metadata: \033[0m",select_file),sep="\n")
+
+cat("\n\033[1m## Isolate-specific Files ##\033[0m\n",sep="\n")
+cat(paste0("\033[1mMash Tree Metadata: \033[0m",meta_file),sep="\n")
+cat(paste0("\033[1mMash Tree Image: \033[0m",mash_tree_image),sep="\n")
+cat(paste0("\033[1mMash Newick File: \033[0m",mash_tree_file),sep="\n")
+cat(paste0("\033[1mMash Top 10: \033[0m",mash_top_10),sep="\n")
 
 ###---REPORT TOP 10---###
+cat("\n\033[1m####### TOP 10 CLOSEST GENOMES #######\033[0m")
 mash.top.10 %>%
   knitr::kable(row.names = F)
-write.table(x = mash.top.10, paste0(output,input.name,"-mash-top-10.jpg"), row.names = F, quote = F, sep = '\t')
 
 ###---CLEAN UP---##
 system(paste0("rm ",output,"sketch.msh ",output,"mash-ava.tsv"))

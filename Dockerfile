@@ -2,7 +2,7 @@
 FROM bioconductor/bioconductor_docker
 
 # required R packages
-RUN R -e "install.packages(c('tidyverse', 'ggnewscale', 'phangorn','BiocManager'), repos='https://cran.rstudio.com/')"
+RUN R -e "install.packages(c('tidyverse', 'ggnewscale', 'phangorn','BiocManager','RColorBrewer','progress'), repos='https://cran.rstudio.com/')"
 RUN R -e "BiocManager::install('treeio'); BiocManager::install('ggtree')"
 
 # Install Mash

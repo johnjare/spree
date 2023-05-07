@@ -80,14 +80,14 @@ if(!(dir.exists(ref_dir))){
   # check if file exists
   if (!file.exists(ncbi_file)) {
     # if file doesn't exist, run NCBI datasets
-    cat(paste0("\033[1mFetching ",args$genus," data from NCBI...\033[0m"))
+    cat(paste0("\033[1mFetching ",args$genus," data from NCBI (This can take a while)...\033[0m"))
     # run NCBI-Datasets
     system(paste0("datasets summary genome taxon ",
                   args$genus,
                   " --as-json-lines | dataformat tsv genome --fields accession,assmstats-genome-coverage,organism-name,assmstats-total-sequence-len,assminfo-status,assminfo-level,organism-tax-id,source_database > ", ncbi_file))
     
   } else {
-    cat("\033[1;33m",ncbi_file," already exists. NCBI datasets will not be run.033[0m")
+    cat("\033[1;33m",ncbi_file," already exists. NCBI datasets will not be run.\033[0m")
   }
   ## check for output
   # check if file exists
@@ -121,7 +121,7 @@ if(!(dir.exists(ref_dir))){
   df.ncbi$Species <- unlist(lapply(df.ncbi$`Organism Name`, FUN=extract_species))
   
   # remove unwanted species
-  df.ncbi <- df.ncbi[grep(x=df.ncbi$Species, pattern= "(uncultured| sp.| spp.)",invert=T),]
+  df.ncbi <- df.ncbi[grep(x=df.ncbi$Species, pattern= "(uncultured| sp.| spp. | synthetic)",invert=T),]
   
   # check number of species - this is to avoid downloading a HUGE number of assemblies!
   n_species <- df.ncbi$Species %>% unique() %>% length()
@@ -320,8 +320,8 @@ mash.all <- mash.all[,1:3] %>%
 # create distance matrix
 dist <- dist(mash.all, method = "euclidean")
 # create tree and save
-upgma <- upgma(dist)
-write.tree(phy = upgma, file = mash_tree_file)
+tree <- nj(dist) %>% midpoint()
+write.tree(phy = tree, file = mash_tree_file)
 
 # make tree image
 ## create color palette
@@ -329,7 +329,7 @@ n_species <- meta$Species %>% unique() %>% length()
 base_cols <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 cols <- colorRampPalette(base_cols)(n_species)
 ## initial plot
-p_mash.tree <- ggtree(upgma,layout = "circular")
+p_mash.tree <- ggtree(tree,layout = "circular")
 ## get sizing info
 size_tree <- function(plot){
   # extract plot data
@@ -359,7 +359,7 @@ p_mash.tree <- p_mash.tree %<+% meta+
   geom_tippoint(aes(color=Species))+
   scale_color_manual(values = cols, na.value = NA)+
   xlim(0,as.numeric(x_max))+
-  ggtitle("UPGMA Mash Tree",subtitle = paste0("Taxon: ",args$genus))
+  ggtitle("Neighbor-Joining Mash Tree",subtitle = paste0("Taxon: ",args$genus))
 ## save image
 n_iso <- p_mash.tree$data %>%
   drop_na() %>%
@@ -397,4 +397,4 @@ mash.top.10 %>%
   knitr::kable(row.names = F)
 
 ###---CLEAN UP---##
-system(paste0("rm sketch.msh ",mash_file))
+system(paste0("rm ",args$outdir,"/sketch.msh ",mash_file))

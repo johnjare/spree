@@ -13,7 +13,7 @@ parser <- ArgumentParser()
 parser$add_argument("-g", dest="genus", required = T,
                     help="NCBI Taxon (e.g., Streptococcus or 1301)")
 parser$add_argument("-p", dest="prefix", default=paste0(format(Sys.time(), "%Y-%m-%d_%H.%M.%S")),
-                    help="cool_project1")
+                    help="Prefix for run-specific files (e.g., cool_project1) (default timestamp)")
 parser$add_argument("-o", dest="output", default="spree",
                     help="output directory (default 'spree')")
 parser$add_argument("-t", dest="threads", default=1,
@@ -61,14 +61,16 @@ dir.create(args$output, showWarnings = F)
 cat("\033[1;32mDone\033[0m",sep="\n")
 
 ###---DEFINE FILE NAMES---###
+# genus-specific
 ncbi_file <- paste0(args$output,args$genus,"-ncbi.tsv")
 select_file <- paste0(args$output,args$genus,'-select-refs.tsv')
+ref_dir <- paste0(args$output,args$genus)
+# run specific
 mash_file <- paste0(args$output,"mash-ava.tsv")
-meta_file <- paste0(args$output,args$prefix,"-metadata.csv")
+meta_file <- paste0(args$output,args$prefix,"-metadata.tsv")
 mash_tree_file <- paste0(args$output,args$prefix,"-mash-ava.tree")
 mash_top_10 <- paste0(args$output,args$prefix,"-mash-top-10.tsv")
 mash_tree_image <- paste0(args$output,args$prefix,"-mash-tree.jpg")
-ref_dir <- paste0(args$output,args$genus)
 
 ###---DETERMINE IF TAXON HAS BEEN RUN---###
 cat("\033[1mChecking if taxon has been run...\033[0m")
@@ -126,7 +128,7 @@ if(!(dir.exists(ref_dir))){
   mean_size <- mean(df.ncbi$`Assembly Stats Total Sequence Length`)
   approx_download <- round(n_species*5*(mean_size/10^9),digits = 1)
   if(approx_download > args$limit & args$force == FALSE){
-    cat(paste0("Warning!!! you are trying to download genomes for ",n_species," species (approx. ",approx_download," GB). That is a lot of genomes! If you are ok with this re-run the command with the '--force' option."))
+    cat(paste0("Warning!!! you are trying to download approx. ",approx_download," GB of data. If you are ok with this re-run the command with the '--force' flag or change the download limit using the '-l' flag"))
     q("no")
   }
   
@@ -249,15 +251,17 @@ cat("\033[1;32mDone\033[0m",sep="\n")
 cat("\033[1mPreparing metadata...\033[0m")
 # prepare metadata
 ## create metdata for input
-input.meta <- data.frame("Assembly Accession"=args$input) %>%
-  mutate(name = gsub(gsub(Assembly.Accession, pattern = ".*/", replacement = ""), pattern = "\\.*$", replacement = ""),
+input.meta <- data.frame(input=args$input) %>%
+  mutate(input = gsub(gsub(input, pattern = ".*/", replacement = ""), pattern = "\\.*$", replacement = ""),
+         name = gsub(gsub(input, pattern = ".*/", replacement = ""), pattern = "\\.*$", replacement = ""),
          Species = "TBD",
          Overall_Status = NA,
          face="bold",
          type="Sample") %>%
-rename("Assembly Accession"=Assembly.Accession)
+rename("Assembly Accession"=input)
 ## re-load metadata (in case this is not the first time running)
-df.select <- read_tsv(select_file, show_col_types = F)
+df.select <- read_tsv(select_file, show_col_types = F) %>%
+  mutate(Species = factor(Species, levels = unique(Species)))
 ## combine input with NCBI metadata
 meta <- df.select %>%
   select(`Assembly Accession`, name, Species, Overall_Status) %>%
@@ -266,7 +270,7 @@ meta <- df.select %>%
          type="Reference") %>%
   rbind(input.meta)
 ## write metadata for use with ggtree by user
-write.csv(meta, file=meta_file)
+write.table(meta, file=meta_file, row.names = F, quote = F, sep = '\t')
 cat("\033[1;32mDone\033[0m",sep="\n")
 
 # load mash file
@@ -361,13 +365,13 @@ n_iso <- p_mash.tree$data %>%
   drop_na() %>%
   nrow()
 # set image dimensions
-wdth <- n_iso/4.5
-if(wdth < 6){
-  wdth <- 6
+wdth <- n_iso/5
+if(wdth < 10){
+  wdth <- 10
 }
-hght=n_iso/4.5
-if(hght < 6){
-  hght <- 6
+hght=n_iso/5
+if(hght < 10){
+  hght <- 10
 }
 
 # save plot
@@ -393,4 +397,4 @@ mash.top.10 %>%
   knitr::kable(row.names = F)
 
 ###---CLEAN UP---##
-system(paste0("rm ",mash_file))
+system(paste0("rm sketch.msh ",mash_file))

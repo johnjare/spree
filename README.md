@@ -6,11 +6,7 @@ Jared Johnson
 
 ## Synopsis
 
-Spree is a tool that helps you classify microbial isolates using whole genome assemblies. It does this by building a UPGMA Mash tree with the target 
-isolate(s) and up to to up to five representatives of each species of a specified genus. Representative genomes are automatically downloaded from the 
-NCBI database and are preferentially selected based on several quality metrics: database source (RefSeq > GenBank), assembly level (complete > chromsome 
-> scaffold > contig), genome length, and depth of coverage. The primary results are a phylogenetic tree and a list of the top 10 closest related genomes 
-based on Mash distance.
+Spree is a tool that helps you classify microbial isolates using whole genome assemblies. It does this by building a UPGMA Mash tree with the target isolate(s) and up to up to five representatives of each species of a specified genus. Representative genomes are automatically downloaded from the NCBI database and are preferentially selected based on several quality metrics: database source (RefSeq > GenBank), assembly level (complete > chromsome > scaffold > contig), genome length, and depth of coverage. The primary results are a phylogenetic tree and a list of the top 10 closest related genomes based on Mash distance.
 
 ## Quick Start
 ```
@@ -56,7 +52,8 @@ positional arguments:
 options:
   -h, --help  show this help message and exit
   -g GENUS    NCBI Taxon (e.g., Streptococcus or 1301)
-  -p PREFIX   cool_project1
+  -p PREFIX   Prefix for run-specific files (e.g., cool_project1) (default
+              timestamp)
   -o OUTPUT   output directory (default 'spree')
   -t THREADS  number of threads to use (default 1)
   -l LIMIT    total download size limit (GB) (default 1)
@@ -82,6 +79,10 @@ The files are specific to the run and will be overwritten if the same prefix is 
 
 # Examples
 ## Blastomyces
+### Command
+```
+spree -g Blastomyces -o blasto -p blast-example -t 8 -l 2 example_genomes/Blastomyces_percursus_GCA_018296075.1.fasta
+```
 ### UPGMA Mash Tree
 <img src="https://github.com/johnjare/spree/blob/main/examples/blasto-example-mash-tree.jpg" width="1000">
 
@@ -100,6 +101,10 @@ The files are specific to the run and will be overwritten if the same prefix is 
 |Blastomyces_percursus_GCA_018296075.1.fasta |GCA_000166155.1 |[1] Blastomyces dermatitidis (n=5) |     0.1052640|              5.8|
 
 ## Streptococcus
+### Command
+```
+spree -g Streptococcus -o strep -t 8 Streptococcus_thermophilus_ATCC_19258.fasta Streptococcus_pyogenes_ATCC_12344.fasta
+```
 ### UPGMA Mash Tree
 <img src="https://github.com/johnjare/spree/blob/main/examples/strep-example-mash-tree.jpg" width="1000">
 

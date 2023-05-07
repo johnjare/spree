@@ -82,10 +82,10 @@ The files are specific to the run and will be overwritten if the same prefix is 
 
 # Examples
 ## Blastomyces
-#### UPGMA Mash Tree
+### UPGMA Mash Tree
 <img src="https://github.com/johnjare/spree/blob/main/examples/blasto-example-mash-tree.jpg" width="1000">
 
-#### Top 10 Closest Genomes
+### Top 10 Closest Genomes
 |Sample                                      |Reference       |Species                            | Mash Distance| % Matching Kmers|
 |:-------------------------------------------|:---------------|:----------------------------------|-------------:|----------------:|
 |Blastomyces_percursus_GCA_018296075.1.fasta |GCA_003206225.1 |[5] Blastomyces percursus (n=14)   |     0.0066634|             76.9|
@@ -99,11 +99,11 @@ The files are specific to the run and will be overwritten if the same prefix is 
 |Blastomyces_percursus_GCA_018296075.1.fasta |GCF_000003525.1 |[1] Blastomyces dermatitidis (n=5) |     0.1037400|              6.0|
 |Blastomyces_percursus_GCA_018296075.1.fasta |GCA_000166155.1 |[1] Blastomyces dermatitidis (n=5) |     0.1052640|              5.8|
 
-### Streptococcus
-#### UPGMA Mash Tree
+## Streptococcus
+### UPGMA Mash Tree
 <img src="https://github.com/johnjare/spree/blob/main/examples/strep-example-mash-tree.jpg" width="1000">
 
-#### Top 10 Closest Genomes
+### Top 10 Closest Genomes
 |Sample                                      |Reference       |Species                                                   | Mash Distance| % Matching Kmers|
 |:-------------------------------------------|:---------------|:---------------------------------------------------------|-------------:|----------------:|
 |Streptococcus_thermophilus_ATCC_19258.fasta |GCF_001008015.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0136002|             60.2|

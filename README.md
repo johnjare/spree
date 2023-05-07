@@ -6,7 +6,7 @@ Jared Johnson
 
 ## Synopsis
 
-Spree is a tool that helps you classify microbial isolates using whole genome assemblies. It does this by building a neighbor-joining Mash tree with up to up to five representatives of each species of a specified genus. Representative genomes are automatically downloaded from the NCBI database and are preferentially selected based on multiple quality metrics: database source (RefSeq > GenBank), assembly level (Complete Genome > Chromsome > Scaffold > Contig), unusual genome lengths (± 3 stdevs), and estimated depth of coverage (≥ 30X). The primary results are a phylogenetic tree and the top 10 closest related genomes based on Mash distance.
+Spree is a tool that helps you classify microbial isolates using whole genome assemblies. It does this by building a neighbor-joining Mash tree with up to five representatives of each species of a specified genus. Representative genomes are automatically downloaded from the NCBI database and are preferentially selected based on multiple quality metrics: database source (RefSeq > GenBank), assembly level (Complete Genome > Chromsome > Scaffold > Contig), unusual genome lengths (± 3 stdevs), and estimated depth of coverage (≥ 30X). The primary results are a phylogenetic tree and the top 10 closest related genomes based on Mash distance. The name Spree is a portmanteau of "species" and "tree".
 
 ## Quick Start
 ```

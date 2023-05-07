@@ -80,10 +80,10 @@ The files are specific to the run and will be overwritten if the same prefix is 
 - A comma-separated file containing the metadata used to make the make the image file using ggtree (e.g., `cool_project1-metadata.csv`)
 - A tab-separated file containing the top 10 closest genomes for each isolate included in the analysis (e.g., `cool_project1-mash-top-10.tsv`)
 
-## Examples
+# Examples
 ## Blastomyces
 #### UPGMA Mash Tree
-
+<img src="https://github.com/johnjare/spree/blob/main/examples/blasto-example-mash-tree.jpg" width="300">
 #### Top 10 Closest Genomes
 |Sample                                      |Reference       |Species                            | Mash Distance| % Matching Kmers|
 |:-------------------------------------------|:---------------|:----------------------------------|-------------:|----------------:|
@@ -98,51 +98,29 @@ The files are specific to the run and will be overwritten if the same prefix is 
 |Blastomyces_percursus_GCA_018296075.1.fasta |GCF_000003525.1 |[1] Blastomyces dermatitidis (n=5) |     0.1037400|              6.0|
 |Blastomyces_percursus_GCA_018296075.1.fasta |GCA_000166155.1 |[1] Blastomyces dermatitidis (n=5) |     0.1052640|              5.8|
 
-
 ### Streptococcus
 #### UPGMA Mash Tree
-
+<img src="https://github.com/johnjare/spree/blob/main/examples/strep-example-mash-tree.jpg" width="300">
 #### Top 10 Closest Genomes
-|Sample                                      |Reference       |Species                                                   | Mash Distance| % Matching 
-Kmers|
+|Sample                                      |Reference       |Species                                                   | Mash Distance| % Matching Kmers|
 |:-------------------------------------------|:---------------|:---------------------------------------------------------|-------------:|----------------:|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_001008015.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0136002|             
-60.2|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_001280285.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0136002|             
-60.2|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_000971665.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0137986|             
-59.8|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_001514435.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0150285|             
-57.4|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_903886475.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0151342|             
-57.2|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_003438185.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0651085|             
-14.6|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_900636445.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0653942|             
-14.5|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_023110355.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0662649|             
-14.2|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_026781275.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0674584|             
-13.8|
-|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_023110145.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0696435|             
-13.1|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_000743015.1 |[105] Streptococcus pyogenes (n=2912)                     |     0.0114865|             
-64.7|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_900475035.1 |[105] Streptococcus pyogenes (n=2912)                     |     0.0115313|             
-64.6|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_000756485.1 |[105] Streptococcus pyogenes (n=2912)                     |     0.0118471|             
-63.9|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_000167435.2 |[105] Streptococcus pyogenes (n=2912)                     |     0.0119840|             
-63.6|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_000772185.1 |[105] Streptococcus pyogenes (n=2912)                     |     0.0137986|             
-59.8|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_012844385.1 |[33] Streptococcus dysgalactiae subsp. equisimilis (n=75) |     0.0751681|             
-11.5|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_012844405.1 |[33] Streptococcus dysgalactiae subsp. equisimilis (n=75) |     0.0755413|             
-11.4|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_013004125.1 |[33] Streptococcus dysgalactiae subsp. equisimilis (n=75) |     0.0755413|             
-11.4|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_008693725.1 |[31] Streptococcus dysgalactiae (n=71)                    |     0.0807479|             
-10.1|
-|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_016128095.1 |[31] Streptococcus dysgalactiae (n=71)                    |     0.0816138|              
-9.9|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_001008015.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0136002|             60.2|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_001280285.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0136002|             60.2|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_000971665.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0137986|             59.8|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_001514435.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0150285|             57.4|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_903886475.1 |[119] Streptococcus thermophilus (n=473)                  |     0.0151342|             57.2|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_003438185.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0651085|             14.6|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_900636445.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0653942|             14.5|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_023110355.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0662649|             14.2|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_026781275.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0674584|             13.8|
+|Streptococcus_thermophilus_ATCC_19258.fasta |GCF_023110145.1 |[129] Streptococcus vestibularis (n=36)                   |     0.0696435|             13.1|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_000743015.1 |[105] Streptococcus pyogenes (n=2912)                     |     0.0114865|             64.7|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_900475035.1 |[105] Streptococcus pyogenes (n=2912)                     |     0.0115313|             64.6|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_000756485.1 |[105] Streptococcus pyogenes (n=2912)                     |     0.0118471|             63.9|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_000167435.2 |[105] Streptococcus pyogenes (n=2912)                     |     0.0119840|             63.6|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_000772185.1 |[105] Streptococcus pyogenes (n=2912)                     |     0.0137986|             59.8|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_012844385.1 |[33] Streptococcus dysgalactiae subsp. equisimilis (n=75) |     0.0751681|             11.5|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_012844405.1 |[33] Streptococcus dysgalactiae subsp. equisimilis (n=75) |     0.0755413|             11.4|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_013004125.1 |[33] Streptococcus dysgalactiae subsp. equisimilis (n=75) |     0.0755413|             11.4|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_008693725.1 |[31] Streptococcus dysgalactiae (n=71)                    |     0.0807479|             10.1|
+|Streptococcus_pyogenes_ATCC_12344.fasta     |GCF_016128095.1 |[31] Streptococcus dysgalactiae (n=71)                    |     0.0816138|              9.9|

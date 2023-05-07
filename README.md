@@ -103,7 +103,7 @@ spree -g Blastomyces -o blasto -p blast-example -t 8 -l 2 example_genomes/Blasto
 ## Streptococcus
 ### Command
 ```
-spree -g Streptococcus -o strep -t 8 Streptococcus_thermophilus_ATCC_19258.fasta Streptococcus_pyogenes_ATCC_12344.fasta
+spree -g Streptococcus -o strep -t 8 -l 2 Streptococcus_thermophilus_ATCC_19258.fasta Streptococcus_pyogenes_ATCC_12344.fasta
 ```
 ### UPGMA Mash Tree
 <img src="https://github.com/johnjare/spree/blob/main/examples/strep-example-mash-tree.jpg" width="1000">

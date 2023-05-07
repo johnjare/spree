@@ -83,7 +83,8 @@ The files are specific to the run and will be overwritten if the same prefix is 
 # Examples
 ## Blastomyces
 #### UPGMA Mash Tree
-<img src="https://github.com/johnjare/spree/blob/main/examples/blasto-example-mash-tree.jpg" width="300">
+<img src="https://github.com/johnjare/spree/blob/main/examples/blasto-example-mash-tree.jpg" width="1000">
+
 #### Top 10 Closest Genomes
 |Sample                                      |Reference       |Species                            | Mash Distance| % Matching Kmers|
 |:-------------------------------------------|:---------------|:----------------------------------|-------------:|----------------:|
@@ -100,7 +101,8 @@ The files are specific to the run and will be overwritten if the same prefix is 
 
 ### Streptococcus
 #### UPGMA Mash Tree
-<img src="https://github.com/johnjare/spree/blob/main/examples/strep-example-mash-tree.jpg" width="300">
+<img src="https://github.com/johnjare/spree/blob/main/examples/strep-example-mash-tree.jpg" width="1000">
+
 #### Top 10 Closest Genomes
 |Sample                                      |Reference       |Species                                                   | Mash Distance| % Matching Kmers|
 |:-------------------------------------------|:---------------|:---------------------------------------------------------|-------------:|----------------:|

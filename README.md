@@ -80,6 +80,7 @@ These files are specific to the run and will be overwritten if the same prefix i
 Each sample in the tree has a colored node and number (displayed in brackets) that correspond to one of the species listed in the legend. The total number of unique assemblies of each species available in NCBI is also displayed in parentheses next to the species names in the lengend. See below for further explanation:
 #### Legend Example
 <img src="https://github.com/johnjare/spree/blob/main/examples/legend_example.png" width="300">
+
 #### Sample Example
 <img src="https://github.com/johnjare/spree/blob/main/examples/node_example.png" width="300">
 
@@ -114,7 +115,7 @@ In this example, we can see that `Blastomyces_percursus_GCA_018296075.1.fasta` w
 spree -g Escherichia -o strep -t 8 -l 2 Streptococcus_thermophilus_ATCC_19258.fasta Streptococcus_pyogenes_ATCC_12344.fasta
 ```
 ### NJ Mash Tree
-In this example, we can see the result of running several input assemblies at a time. While these assemblies were of different species, they still classified correctly in each case. 
+In this example, we can see the result of running several input assemblies at a time. While these assemblies were different species, they still classified correctly in each case. This plot also demonstrates a weakeness. We can see that synthetic *E. coli* were included in the plot. While this does not affect our interpretation, it is a reminder that we are at the mercy of anyone who submits to NCBI.
 
 <img src="https://github.com/johnjare/spree/blob/main/examples/esch-example-mash-tree.jpg" width="1000">
 

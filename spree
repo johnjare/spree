@@ -121,7 +121,7 @@ if(!(dir.exists(ref_dir))){
   df.ncbi$Species <- unlist(lapply(df.ncbi$`Organism Name`, FUN=extract_species))
   
   # remove unwanted species
-  df.ncbi <- df.ncbi[grep(x=df.ncbi$Species, pattern= "(uncultured| sp.| spp. | synthetic)",invert=T),]
+  df.ncbi <- df.ncbi[grep(x=df.ncbi$Species, pattern= "(uncultured | sp.| spp. | synthetic)",invert=T),]
   
   # check number of species - this is to avoid downloading a HUGE number of assemblies!
   n_species <- df.ncbi$Species %>% unique() %>% length()
@@ -295,10 +295,11 @@ get_top.10 <- function(sample){
   subdf <- mash.all %>%
     subset(X1 == sample) %>%
     subset(X1 != X2) %>% 
-    mutate(`% Matching Kmers` = as.numeric(gsub(X5, pattern="/1000", replacement = ""))/10) %>% 
+    mutate(`% Matching Hashes` = as.numeric(gsub(X5, pattern="/1000", replacement = ""))/10,
+           `Est. % ANI` = round(100*(1-X3), digits = 1)) %>% 
     rename("Sample"=X1,"Assembly Accession"=X2, "Mash Distance"=X3) %>%
     merge(df.select[,c("Assembly Accession","Species")]) %>%
-    select(Sample, `Assembly Accession`, Species, `Mash Distance`,`% Matching Kmers`) %>%
+    select(Sample, `Assembly Accession`, Species, `Mash Distance`,`Est. % ANI`, `% Matching Hashes`) %>%
     rename(Reference = `Assembly Accession`)
   subdf <- subdf[order(subdf$`Mash Distance`),][1:10,]
   return(subdf)

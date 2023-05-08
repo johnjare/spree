@@ -42,7 +42,7 @@ git clone https://github.com/johnjare/spree.git --branch v1.0 && mv spree/spree 
 # Usage
 ## Inputs
 ```
-usage: ./spree [-h] -g GENUS [-p PREFIX] [-o OUTPUT] [-t THREADS] [-l LIMIT]
+usage: spree [-h] -g GENUS [-p PREFIX] [-o OUTPUT] [-t THREADS] [-l LIMIT]
                [--force]
                [input ...]
 
@@ -96,18 +96,18 @@ In this example, we can see that `Blastomyces_percursus_GCA_018296075.1.fasta` w
 <img src="https://github.com/johnjare/spree/blob/main/examples/blasto-example-mash-tree.jpg" width="1000">
 
 ### Top 10 Closest Genomes
-|Sample                                      |Reference       |Species                            | Mash Distance| % Matching Kmers|
-|:-------------------------------------------|:---------------|:----------------------------------|-------------:|----------------:|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_003206225.1 |[5] Blastomyces percursus (n=14)   |     0.0066634|             76.9|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_018296065.1 |[5] Blastomyces percursus (n=14)   |     0.0070168|             75.9|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_003206215.1 |[2] Blastomyces emzantsi (n=8)     |     0.0083078|             72.4|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_003206295.1 |[5] Blastomyces percursus (n=14)   |     0.0085767|             71.7|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_001883805.1 |[5] Blastomyces percursus (n=14)   |     0.0091258|             70.3|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_003206275.1 |[5] Blastomyces percursus (n=14)   |     0.0092455|             70.0|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_000003525.2 |[1] Blastomyces dermatitidis (n=5) |     0.1037400|              6.0|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_000151595.1 |[1] Blastomyces dermatitidis (n=5) |     0.1037400|              6.0|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCF_000003525.1 |[1] Blastomyces dermatitidis (n=5) |     0.1037400|              6.0|
-|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_000166155.1 |[1] Blastomyces dermatitidis (n=5) |     0.1052640|              5.8|
+|Sample                                      |Reference       |Species                            | Mash Distance| Est. % ANI| % Matching Hashes|
+|:-------------------------------------------|:---------------|:----------------------------------|-------------:|----------:|-----------------:|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_003206225.1 |[5] Blastomyces percursus (n=14)   |     0.0066634|       99.3|              76.9|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_018296065.1 |[5] Blastomyces percursus (n=14)   |     0.0070168|       99.3|              75.9|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_003206215.1 |[2] Blastomyces emzantsi (n=8)     |     0.0083078|       99.2|              72.4|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_003206295.1 |[5] Blastomyces percursus (n=14)   |     0.0085767|       99.1|              71.7|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_001883805.1 |[5] Blastomyces percursus (n=14)   |     0.0091258|       99.1|              70.3|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_003206275.1 |[5] Blastomyces percursus (n=14)   |     0.0092455|       99.1|              70.0|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_000003525.2 |[1] Blastomyces dermatitidis (n=5) |     0.1037400|       89.6|               6.0|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_000151595.1 |[1] Blastomyces dermatitidis (n=5) |     0.1037400|       89.6|               6.0|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCF_000003525.1 |[1] Blastomyces dermatitidis (n=5) |     0.1037400|       89.6|               6.0|
+|Blastomyces_percursus_GCA_018296075.1.fasta |GCA_000166155.1 |[1] Blastomyces dermatitidis (n=5) |     0.1052640|       89.5|               5.8|
 
 ## Escherichia
 ### Command
@@ -120,28 +120,28 @@ In this example, we can see the result of running several input assemblies at a 
 <img src="https://github.com/johnjare/spree/blob/main/examples/esch-example-mash-tree.jpg" width="1000">
 
 ### Top 10 Closest Genomes
-|Sample                                  |Reference       |Species                            | Mash Distance| % Matching Kmers|
-|:---------------------------------------|:---------------|:----------------------------------|-------------:|----------------:|
-|Escherichia_coli_ATCC_11775.fasta       |GCF_000833145.1 |[2] Escherichia coli (n=212702)    |     0.0289561|             37.4|
-|Escherichia_coli_ATCC_11775.fasta       |GCF_000988355.1 |[2] Escherichia coli (n=212702)    |     0.0296126|             36.7|
-|Escherichia_coli_ATCC_11775.fasta       |GCA_000474035.1 |[7] synthetic Escherichia (n=3)    |     0.0298031|             36.5|
-|Escherichia_coli_ATCC_11775.fasta       |GCA_000826905.1 |[7] synthetic Escherichia (n=3)    |     0.0298031|             36.5|
-|Escherichia_coli_ATCC_11775.fasta       |GCA_000826925.1 |[7] synthetic Escherichia (n=3)    |     0.0298031|             36.5|
-|Escherichia_coli_ATCC_11775.fasta       |GCF_000833635.2 |[2] Escherichia coli (n=212702)    |     0.0298988|             36.4|
-|Escherichia_coli_ATCC_11775.fasta       |GCF_000987875.1 |[2] Escherichia coli (n=212702)    |     0.0319897|             34.3|
-|Escherichia_coli_ATCC_11775.fasta       |GCF_000967155.2 |[2] Escherichia coli (n=212702)    |     0.0326168|             33.7|
-|Escherichia_coli_ATCC_11775.fasta       |GCA_029876145.1 |[5] Escherichia ruysiae (n=14)     |     0.0653942|             14.5|
-|Escherichia_coli_ATCC_11775.fasta       |GCA_019839465.1 |[5] Escherichia ruysiae (n=14)     |     0.0659724|             14.3|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCF_020097475.1 |[3] Escherichia fergusonii (n=212) |     0.0000716|             99.7|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCF_008064895.1 |[3] Escherichia fergusonii (n=212) |     0.0114865|             64.7|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCF_008064875.1 |[3] Escherichia fergusonii (n=212) |     0.0117564|             64.1|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCF_008064915.1 |[3] Escherichia fergusonii (n=212) |     0.0136002|             60.2|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCF_003944565.2 |[3] Escherichia fergusonii (n=212) |     0.0154006|             56.7|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCF_000833635.2 |[2] Escherichia coli (n=212702)    |     0.0716227|             12.5|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCA_000474035.1 |[7] synthetic Escherichia (n=3)    |     0.0719629|             12.4|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCA_000826905.1 |[7] synthetic Escherichia (n=3)    |     0.0719629|             12.4|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCA_000826925.1 |[7] synthetic Escherichia (n=3)    |     0.0719629|             12.4|
-|Escherichia_fergusonii_ATCC_35469.fasta |GCF_000988355.1 |[2] Escherichia coli (n=212702)    |     0.0719629|             12.4|
+|Sample                                  |Reference       |Species                            | Mash Distance| Est. % ANI| % Matching Hashes|
+|:---------------------------------------|:---------------|:----------------------------------|-------------:|----------:|-----------------:|
+|Escherichia_coli_ATCC_11775.fasta       |GCF_000833145.1 |[2] Escherichia coli (n=212702)    |     0.0289561|       97.1|              37.4|
+|Escherichia_coli_ATCC_11775.fasta       |GCF_000988355.1 |[2] Escherichia coli (n=212702)    |     0.0296126|       97.0|              36.7|
+|Escherichia_coli_ATCC_11775.fasta       |GCA_000474035.1 |[7] synthetic Escherichia (n=3)    |     0.0298031|       97.0|              36.5|
+|Escherichia_coli_ATCC_11775.fasta       |GCA_000826905.1 |[7] synthetic Escherichia (n=3)    |     0.0298031|       97.0|              36.5|
+|Escherichia_coli_ATCC_11775.fasta       |GCA_000826925.1 |[7] synthetic Escherichia (n=3)    |     0.0298031|       97.0|              36.5|
+|Escherichia_coli_ATCC_11775.fasta       |GCF_000833635.2 |[2] Escherichia coli (n=212702)    |     0.0298988|       97.0|              36.4|
+|Escherichia_coli_ATCC_11775.fasta       |GCF_000987875.1 |[2] Escherichia coli (n=212702)    |     0.0319897|       96.8|              34.3|
+|Escherichia_coli_ATCC_11775.fasta       |GCF_000967155.2 |[2] Escherichia coli (n=212702)    |     0.0326168|       96.7|              33.7|
+|Escherichia_coli_ATCC_11775.fasta       |GCA_029876145.1 |[5] Escherichia ruysiae (n=14)     |     0.0653942|       93.5|              14.5|
+|Escherichia_coli_ATCC_11775.fasta       |GCA_019839465.1 |[5] Escherichia ruysiae (n=14)     |     0.0659724|       93.4|              14.3|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCF_020097475.1 |[3] Escherichia fergusonii (n=212) |     0.0000716|      100.0|              99.7|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCF_008064895.1 |[3] Escherichia fergusonii (n=212) |     0.0114865|       98.9|              64.7|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCF_008064875.1 |[3] Escherichia fergusonii (n=212) |     0.0117564|       98.8|              64.1|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCF_008064915.1 |[3] Escherichia fergusonii (n=212) |     0.0136002|       98.6|              60.2|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCF_003944565.2 |[3] Escherichia fergusonii (n=212) |     0.0154006|       98.5|              56.7|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCF_000833635.2 |[2] Escherichia coli (n=212702)    |     0.0716227|       92.8|              12.5|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCA_000474035.1 |[7] synthetic Escherichia (n=3)    |     0.0719629|       92.8|              12.4|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCA_000826905.1 |[7] synthetic Escherichia (n=3)    |     0.0719629|       92.8|              12.4|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCA_000826925.1 |[7] synthetic Escherichia (n=3)    |     0.0719629|       92.8|              12.4|
+|Escherichia_fergusonii_ATCC_35469.fasta |GCF_000988355.1 |[2] Escherichia coli (n=212702)    |     0.0719629|       92.8|              12.4|
 
 # Limitations
 - This method requires that you know the genus of the organism prior to use. This is often the case in public health when using MALDI-TOF to classify organisms prior to whole genome sequencing.

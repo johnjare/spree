@@ -10,7 +10,7 @@ Spree is a tool that helps you classify microbial isolates using whole genome as
 
 ## Quick Start
 ```
-spree -g Streptococcus -o strep-tree -t 8 strep-1.fasta
+spree -g Escherichia -o esch-tree -t 8 esch-1.fasta
 ```
 
 # Installation
@@ -88,10 +88,10 @@ Each sample in the tree has a colored node and number (displayed in brackets) th
 ## Blastomyces
 ### Command
 ```
-spree -g Blastomyces -o blasto -p blast-example -t 8 -l 2 example_genomes/Blastomyces_percursus_GCA_018296075.1.fasta
+spree -g Blastomyces -o blasto -p blasto-example -t 8 -l 2 example_genomes/Blastomyces_percursus_GCA_018296075.1.fasta
 ```
 ### NJ Mash Tree
-In this example, we can see that `Blastomyces_percursus_GCA_018296075.1.fasta` was correctly classified as *Blastomyces_percursus*; however, can also see one of the limitations of relying on species classifications from NCBI. Assembly GCA_003206215.1 was reported as *Blastomyces emzantsi* in NCBI but was likely misclassified and is actually *Blastomyces percursus*. This demonstrates why you should always be cautions when interpreting these trees.
+In this example, we can see that `Blastomyces_percursus_GCA_018296075.1.fasta` was correctly classified as *Blastomyces_percursus*; however, we can also see one of the limitations of relying on species classifications from NCBI. Assembly GCA_003206215.1 was reported as *Blastomyces emzantsi* in NCBI but was likely misclassified and is actually *Blastomyces percursus*. This demonstrates why you should always be cautions when interpreting these trees.
 
 <img src="https://github.com/johnjare/spree/blob/main/examples/blasto-example-mash-tree.jpg" width="1000">
 

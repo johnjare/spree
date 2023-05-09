@@ -2,7 +2,7 @@
 FROM bioconductor/bioconductor_docker
 
 # required R packages
-RUN R -e "install.packages(c('tidyverse', 'ggnewscale', 'phangorn','BiocManager','RColorBrewer','progress'), repos='https://cran.rstudio.com/')"
+RUN R -e "install.packages(c('tidyverse', 'ggnewscale', 'phangorn','BiocManager','RColorBrewer','progress','argparse'), repos='https://cran.rstudio.com/')"
 RUN R -e "BiocManager::install('treeio'); BiocManager::install('ggtree')"
 
 # Install Mash
@@ -12,4 +12,4 @@ RUN wget https://github.com/marbl/Mash/releases/download/v2.3/mash-Linux64-v2.3.
 RUN wget https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v2/linux-amd64/datasets && wget https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v2/linux-amd64/dataformat && chmod +x datasets dataformat && mv datasets bin/ && mv dataformat bin/
 
 # Clone the spree repository
-RUN git clone https://github.com/johnjare/spree.git --branch v1.0 && mv spree/spree bin/
+RUN git clone https://github.com/johnjare/spree.git && mv spree/spree bin/
